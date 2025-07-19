@@ -16,9 +16,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { AccountCircle } from '@mui/icons-material';
+import AppsIcon from '@mui/icons-material/Apps';
+import FilterDramaTwoToneIcon from '@mui/icons-material/FilterDramaTwoTone';
+import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+
+import { Start } from './Start';
+import { Climate } from './Climate';
+import { Settings } from './Settings';
 
 const drawerWidth = 240;
 
@@ -108,6 +113,8 @@ export function Home() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+ 
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -115,6 +122,11 @@ export function Home() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const modules1 = ['Incio', 'Clima'];
+  const modules2 = ['Configurações'];
+  
+  const [modulePage, setModulePage] = React.useState(modules1[0]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -159,9 +171,10 @@ export function Home() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {modules1.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
+                onClick={() => setModulePage(text)}
                 sx={[
                   {
                     minHeight: 48,
@@ -191,8 +204,9 @@ export function Home() {
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
+                  {index === 0 && <AppsIcon />}
+                  {index === 1 && <FilterDramaTwoToneIcon />}
+                </ListItemIcon >
                 <ListItemText
                   primary={text}
                   sx={[
@@ -208,65 +222,68 @@ export function Home() {
               </ListItemButton>
             </ListItem>
           ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
+        </List>   
+        <Box sx={{flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'end'}}>
+          <Divider />
+          <List>
+            {modules2.map((text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  onClick={() => setModulePage(text)}
                   sx={[
                     {
-                      minWidth: 0,
-                      justifyContent: 'center',
+                      minHeight: 48,
+                      px: 2.5,
                     },
                     open
                       ? {
-                          mr: 3,
+                          justifyContent: 'initial',
                         }
                       : {
-                          mr: 'auto',
+                          justifyContent: 'center',
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+                  <ListItemIcon
+                    sx={[
+                      {
+                        minWidth: 0,
+                        justifyContent: 'center',
+                      },
+                      open
+                        ? {
+                            mr: 3,
+                          }
+                        : {
+                            mr: 'auto',
+                          },
+                    ]}
+                  >
+                    {index === 0 && <SettingsTwoToneIcon />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={[
+                      open
+                        ? {
+                            opacity: 1,
+                          }
+                        : {
+                            opacity: 0,
+                          },
+                    ]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography sx={{ marginBottom: 2 }}>
-          Ola
-        </Typography>
+        {modulePage === modules1[0] && <Start />}
+        {modulePage === modules1[1] && <Climate />}
+        {modulePage === modules2[0] && <Settings />}
       </Box>
     </Box>
   );

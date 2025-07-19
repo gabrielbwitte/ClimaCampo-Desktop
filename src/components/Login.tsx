@@ -45,7 +45,7 @@ export function Login(props: any) {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField placeholder="Usuario" fullWidth required autoFocus type="text" sx={{ mb: 2 }} onChange={(e) => setUser(e.target.value)}/>
-                    <TextField placeholder="Senha" fullWidth required autoFocus type="password" sx={{ mb: 2 }} onChange={(e) => setPassword(e.target.value)}/>
+                    <TextField placeholder="Senha" fullWidth required type="password" sx={{ mb: 2 }} onChange={(e) => setPassword(e.target.value)}/>
                     {load && <LinearProgress />}
                     {errInput && <Typography sx={{ textAlign: "center" }} variant="overline" color="error">{textMessage}</Typography>}
                     <Button type="submit" variant="contained" fullWidth sx={{ mt: 1 }}>Entrar</Button>

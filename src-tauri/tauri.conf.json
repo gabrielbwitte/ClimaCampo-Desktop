@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "climacampo",
-        "width": 800,
-        "height": 600
+        "title": "ClimaCampo",
+        "width": 1200,
+        "height": 800
       }
     ],
     "security": {
@@ -30,6 +30,14 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "linux": {
+      "deb": {
+        "files": {
+          "/usr/share/README.md": "../README.md", 
+          "/usr/share/assets": "../src/assets/react.svg" 
+        }
+      }
+    }
   }
 }
