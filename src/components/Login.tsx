@@ -1,39 +1,29 @@
 import { Avatar, Box, Button, Container, LinearProgress, Paper, TextField, Typography } from "@mui/material";
 import FilterDramaIcon from '@mui/icons-material/FilterDrama';
-import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
+
 
 export function Login(props: any) {
-    const [user, setUser] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [textMessage, setTextMessage] = useState("");
-
+    
     const [load, setLoad] = useState(false);
     const [errInput, setErrInput] = useState(false);
 
     function handleSubmit(event: any) {
         event.preventDefault();
-
-        setErrInput(false)
+        setErrInput(false);
         setLoad(true);
-        invoke('login', { user: user, password: password })
-            .then((message) => isLogin(message))
-            .catch((error) => console.log(error));
+        props.LoginForm({username, password})
     }
 
-    function isLogin(message: any) {
-        if(message === 200) {
-            props.onStatus(message)
-        } else if(message === 401) {
-            setLoad(false)
-            setErrInput(true)
-            setTextMessage("Usuário ou senha incoretos")
-        } else {
-            setErrInput(true)
-            setTextMessage("Erro na requisição")
+    useEffect(() => {
+        if(props.error) {
+            setErrInput(true);
+            setLoad(false);
         }
-    }
-
+    }, [props.error])
+    
     return (
         <Container maxWidth="xs">
             <Paper elevation={10} sx={{marginTop: 8, padding: 2}}>
@@ -44,10 +34,10 @@ export function Login(props: any) {
                     ClimaCampo
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                    <TextField placeholder="Usuario" fullWidth required autoFocus type="text" sx={{ mb: 2 }} onChange={(e) => setUser(e.target.value)}/>
+                    <TextField placeholder="Usuario" fullWidth required autoFocus type="text" sx={{ mb: 2 }} onChange={(e) => setUsername(e.target.value)}/>
                     <TextField placeholder="Senha" fullWidth required type="password" sx={{ mb: 2 }} onChange={(e) => setPassword(e.target.value)}/>
                     {load && <LinearProgress />}
-                    {errInput && <Typography sx={{ textAlign: "center" }} variant="overline" color="error">{textMessage}</Typography>}
+                    {errInput && <Typography sx={{ textAlign: "center" }} variant="overline" color="error">{props.error}</Typography>}
                     <Button type="submit" variant="contained" fullWidth sx={{ mt: 1 }}>Entrar</Button>
                 </Box>
             </Paper>

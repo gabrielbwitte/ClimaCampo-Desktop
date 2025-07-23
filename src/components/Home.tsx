@@ -16,7 +16,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { AccountCircle } from '@mui/icons-material';
 import AppsIcon from '@mui/icons-material/Apps';
 import FilterDramaTwoToneIcon from '@mui/icons-material/FilterDramaTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
@@ -24,6 +23,7 @@ import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import { Start } from './Start';
 import { Climate } from './Climate';
 import { Settings } from './Settings';
+import { MenuProfile } from './MenuProfile';
 
 const drawerWidth = 240;
 
@@ -151,15 +151,7 @@ export function Home() {
             ClimaCampo
           </Typography>
           <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'end'}}>
-            <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+            <MenuProfile />
           </Box>
         </Toolbar>
       </AppBar>
