@@ -24,7 +24,7 @@ function App() {
   }
 
   listen<number>('logoff_command_ipc', (event) => {
-    if(event.payload === 401) {
+    if(event.payload === 1) {
       setIsLogin(false);
     }
   })

@@ -1,7 +1,7 @@
 use std::{collections::HashMap, sync::Arc};
 
 use reqwest::cookie::{CookieStore, Jar};
-use tauri::Url;
+use tauri::{Url};
 use tauri_plugin_http::reqwest;
 
 use crate::models::user::ObjDeleteSession;
@@ -14,7 +14,7 @@ pub struct ApiReq {
 }
 
 impl ApiReq {
-    pub fn new(base_url: &str) -> Self {
+    pub fn new(base_url: &str) -> Arc<Self> {
         let cookie_store = Arc::new(Jar::default());
 
         let client = reqwest::Client::builder()
@@ -22,7 +22,12 @@ impl ApiReq {
             .build()
             .unwrap();
 
-        Self { client: client, url: base_url.to_string(), cookie_store, }
+        Arc::new(Self {
+             client: client, 
+             url: base_url.to_string(), 
+             cookie_store 
+            }
+        )
     }
 
     pub async fn login(&self ,username: String, password: String) -> u16 {
@@ -41,29 +46,32 @@ impl ApiReq {
         }
     }
 
-    pub async fn logoff(&self) {
-        let url = format!("{}/logoff", self.url);
+    pub async fn logoff(&self) -> u16 {
         let parsed_url = Url::parse(&self.url).unwrap();
         let cookie_header = self.cookie_store.cookies(&parsed_url);
 
-        let req = self.client.delete(url);
+        
+        let req = self.client.delete(format!("{}/logoff", self.url));
 
         let req = if let Some(cookie_str) = cookie_header {
-            req.header("token", cookie_str.to_str().unwrap())
+            let token_value = cookie_str.to_str().unwrap()
+                .split('=')
+                .nth(1)
+                .expect("Formato de token invalido");
+            req.header("token", token_value)
         } else {
             req
         };
 
-    
         let res = req.send().await.unwrap().json::<ObjDeleteSession>().await;
 
-        println!("{:?}", res);
+        println!("{:?}", &res);
 
         match res {
             Ok(response) => {
-                println!("{:?}", response);
+                return response.deletedCount;
             },
-            Err(error) => println!("{:?}", error)
+            Err(_) => 500
         }
     }
 }

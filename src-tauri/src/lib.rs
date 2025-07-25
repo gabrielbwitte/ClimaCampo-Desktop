@@ -4,11 +4,13 @@ mod calls_ipc;
 
 use calls_ipc::calls::{login_ipc, logoff_ipc};
 
+use crate::api::user::ApiReq;
+
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
+        .manage(ApiReq::new("https://www.farmnext.com.br"))
         .invoke_handler(tauri::generate_handler![
             login_ipc,
             logoff_ipc
