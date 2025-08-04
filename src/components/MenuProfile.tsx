@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Logout from '@mui/icons-material/Logout';
 
 import { invoke } from '@tauri-apps/api/core';
+import DialogProfile from './DialogProfile';
 
 export function MenuProfile() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -16,19 +17,31 @@ export function MenuProfile() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const [openProfile, setOpenProfile] = React.useState(false);
+
   const handleClose = (event: any) => {
     const idMenu = event.target.id;
-    
-    if(idMenu === 'account') {
 
+    if(idMenu === 'account') {
+      setOpenProfile(true)
     } else if (idMenu === 'logoff') {
       invoke('logoff_ipc');
     }
     setAnchorEl(null);
   };
 
+  const handleCloseProfile = (e: boolean) => {
+    setOpenProfile(e)
+  }
+
   return (
     <React.Fragment>
+      
+         {
+          openProfile && <DialogProfile open={handleCloseProfile}/>
+         }
+      
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
