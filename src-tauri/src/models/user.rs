@@ -39,5 +39,5 @@ pub struct Access {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub c_access: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub mapa: Option<bool>,
+    pub modules: Option<Vec<String>>,
 }

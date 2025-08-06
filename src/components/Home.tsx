@@ -24,6 +24,7 @@ import { Start } from './Start';
 import { Climate } from './Climate';
 import { Settings } from './Settings';
 import { MenuProfile } from './MenuProfile';
+import { invoke } from '@tauri-apps/api/core';
 
 const drawerWidth = 240;
 
@@ -109,6 +110,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+interface User {
+    name: string,
+    email: string,
+    access: {
+      modules: []
+    }
+}
+
 export function Home() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -123,10 +132,25 @@ export function Home() {
     setOpen(false);
   };
 
-  const modules1 = ['Incio', 'Clima'];
+  const [access, setAccess] = React.useState<User | null>(null);
+  
+      React.useEffect(() => {
+          async function featchUser() {
+              try {
+                  const fetch = await invoke<User>('get_user_profile');
+                  setAccess(fetch);
+                  console.log(fetch);
+              } catch(err) {
+                  console.log(err)
+              }
+          }
+          featchUser();
+      }, [])
+
+  //const modules = ["Inicio", "Clima"]
   const modules2 = ['Configurações'];
   
-  const [modulePage, setModulePage] = React.useState(modules1[0]);
+  const [modulePage, setModulePage] = React.useState("Inicio");
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -163,7 +187,7 @@ export function Home() {
         </DrawerHeader>
         <Divider />
         <List>
-          {modules1.map((text, index) => (
+          {access?.access !== null && access?.access.modules.map((text) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 onClick={() => setModulePage(text)}
@@ -196,8 +220,8 @@ export function Home() {
                         },
                   ]}
                 >
-                  {index === 0 && <AppsIcon />}
-                  {index === 1 && <FilterDramaTwoToneIcon />}
+                  {text === "Inicio" && <AppsIcon />}
+                  {text === "Clima" && <FilterDramaTwoToneIcon />}
                 </ListItemIcon >
                 <ListItemText
                   primary={text}
@@ -273,9 +297,9 @@ export function Home() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {modulePage === modules1[0] && <Start />}
-        {modulePage === modules1[1] && <Climate />}
-        {modulePage === modules2[0] && <Settings />}
+        {modulePage === "Inicio" && <Start />}
+        {modulePage === "Clima" && <Climate />}
+        {modulePage === "Configurações" && <Settings />}
       </Box>
     </Box>
   );

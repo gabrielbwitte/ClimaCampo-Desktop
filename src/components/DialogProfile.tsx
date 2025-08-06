@@ -1,9 +1,9 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 
-export interface User {
+interface User {
     name: string,
     email: string
 }
@@ -11,15 +11,17 @@ export interface User {
 export default function DialogProfile(props: any) {
     const [data, setData] = useState<User | null>(null);
 
-    async function featchUser() {
-        try {
-            const fetch = await invoke<User>('get_user_profile');
-            setData(fetch);
-        } catch(err) {
-            console.log(err)
+    useEffect(() => {
+        async function featchUser() {
+            try {
+                const fetch = await invoke<User>('get_user_profile');
+                setData(fetch);
+            } catch(err) {
+                console.log(err)
+            }
         }
-    }
-    featchUser();
+        featchUser();
+    }, [])
         
     const handleClose = () => {
         props.open(false);
